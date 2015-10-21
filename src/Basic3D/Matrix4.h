@@ -1,3 +1,18 @@
+/* Copyright (C) 2015 Tim Potze
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 #pragma once
 
 #include "Vector3.h"
@@ -20,21 +35,7 @@ struct Matrix4 {
         float v21, float v22, float v23, float v24,
         float v31, float v32, float v33, float v34,
         float v41, float v42, float v43, float v44) :
-        /* Copyright (C) 2015 Tim Potze
-        *
-        * Licensed under the Apache License, Version 2.0 (the "License");
-        * you may not use this file except in compliance with the License.
-        * You may obtain a copy of the License at
-        *
-        *     http://www.apache.org/licenses/LICENSE-2.0
-        *
-        * Unless required by applicable law or agreed to in writing, software
-        * distributed under the License is distributed on an "AS IS" BASIS,
-        * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-        * See the License for the specific language governing permissions and
-        * limitations under the License.
-        */
-
+        m11(v11), m12(v12), m13(v13), m14(v14),
         m21(v21), m22(v22), m23(v23), m24(v24),
         m31(v31), m32(v32), m33(v33), m34(v34),
         m41(v41), m42(v42), m43(v43), m44(v44) {
