@@ -1,0 +1,59 @@
+/* Copyright (C) 2015 Tim Potze
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+void TestGame::draw_line(Vector2 point0, Vector2 point1) {
+  int x0 = (int)point0.x;
+  int y0 = (int)point0.y;
+  int x1 = (int)point1.x;
+  int y1 = (int)point1.y;
+
+  auto dx = abs(x1 - x0);
+  auto dy = abs(y1 - y0);
+  auto sx = (x0 < x1) ? 1 : -1;
+  auto sy = (y0 < y1) ? 1 : -1;
+  auto err = dx - dy;
+
+  while (true) {
+    buffer_set(x0,y0, 0xff0000);
+
+    if ((x0 == x1) && (y0 == y1)) break;
+    auto e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 < dx) { err += dx; y0 += sy; }
+  }
+}
+
+  for (auto i = 0; i < 12; i++) {
+    auto face = cMesh.faces[i];
+    auto vertexA = cMesh.vertices[face.a];
+    auto vertexB = cMesh.vertices[face.b];
+    auto vertexC = cMesh.vertices[face.c];
+
+    auto pixelA = project(vertexA, transformMatrix);
+    auto pixelB = project(vertexB, transformMatrix);
+    auto pixelC = project(vertexC, transformMatrix);
+
+    draw_line(pixelA, pixelB);
+    draw_line(pixelB, pixelC);
+    draw_line(pixelC, pixelA);
+  }
+
+float compute_normal_dot_light(Vector3 vertex, Vector3 normal, Vector3 lightPosition)
+{
+  Vector3 lightDirection = lightPosition - vertex;
+  float r = normal.normalized().dot(lightDirection.normalized());
+
+  return r < 0 ? 0 : r;
+}
