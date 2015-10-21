@@ -14,11 +14,22 @@
 */
 
 #include "Engine.h"
+#include <cstring>
 
 #define RATE_RENDER     (24)
 #define RATE_UPDATE     (30)
 
 #define MAX_DEPTH       (9112383.0f)
+
+
+Engine::Engine() {
+    for (int i = 0; i < buffer_size(); i++) {
+        depthBuffer_[i] = MAX_DEPTH;
+        dDepthBuffer_[i] = MAX_DEPTH;
+    }
+}
+
+//static int renders = 0;
 
 void Engine::tick(double timeElapsed) {
     timeSinceRender_ += timeElapsed;
@@ -28,6 +39,14 @@ void Engine::tick(double timeElapsed) {
         timeSinceRender_ -= 0;
         awaitRender_ = true;
     }
+
+    // debugging / fps:
+    //renders++;
+    //awaitRender_ = true;
+    //if (timeSinceRender_ > 1.0f) {
+    //    renders = 0;
+    //    timeSinceRender_ = 0;
+    //}
 
     if (timeSinceUpdate_ > 1.0f / RATE_UPDATE) {
         timeSinceUpdate_ -= 0;
@@ -58,11 +77,14 @@ const int Engine::buffer_size() {
     return ENGINE_WIDTH * ENGINE_HEIGHT;
 }
 
-void Engine::buffer_clear(Color color) {
-    for (int i = 0; i < buffer_size(); i++) {
-        buffer_[i] = color;
-        depthBuffer_[i] = MAX_DEPTH;
-    }
+void Engine::buffer_clear() {
+    memcpy(buffer_, dBuffer_, buffer_size() * sizeof(Color));
+    memcpy(depthBuffer_, dDepthBuffer_, buffer_size() * sizeof(float));
+}
+
+void Engine::buffer_set_color(Color color) {
+    for (int i = 0; i < buffer_size(); i++)
+        dBuffer_[i] = color;
 }
 
 bool Engine::buffer_check(int x, int y, float depth) {

@@ -34,8 +34,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 SimWindow::SimWindow(Engine *engine) {
     window_ = this;
     engine_ = engine;
-
-    this->hWnd_ = NULL;
+    hWnd_ = NULL;
 }
 
 int SimWindow::run() {
@@ -57,13 +56,14 @@ int SimWindow::run() {
             QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 
             if (//GetFocus() == hWnd_ &&
-                game_loop((double)(tick - lastTick) / (double)frequency)) {
+                game_loop((double)(tick - lastTick) / frequency)) {
 
                 BitBlt(dc_, 0, 0,
                     WINDOW_WIDTH,
                     WINDOW_HEIGHT, graphics_, 0, 0, SRCCOPY);
 
             }
+
             lastTick = tick;
         }
     }
@@ -116,21 +116,6 @@ HRESULT SimWindow::create() {
     bitmap_ = CreateCompatibleBitmap(dc_, WINDOW_WIDTH, WINDOW_HEIGHT);
     oldHandle_ = SelectObject(graphics_, bitmap_);
 
-    /* Clear whitespace to black.
-    */
-    HBRUSH brush = CreateSolidBrush(0);
-    SelectObject(dc_, brush);
-    Rectangle(dc_, 0, 0, window_width, window_height);
-
-    SelectObject(graphics_, CreatePen(PS_NULL, 0, 0));
-    SelectObject(graphics_, CreateSolidBrush(0xffffff));
-
-    SetBkMode(graphics_, TRANSPARENT);
-
-    /* Get display refresh rate */
-    DEVMODE mode;
-    EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &mode);
-
     ShowWindow(hWnd_, SW_SHOW);
     UpdateWindow(hWnd_);
 
@@ -157,7 +142,8 @@ bool SimWindow::game_loop(double delta) {
         for (int i = 0; i < engine_->buffer_size(); i++) {
             Color pixel = engine_->buffer()[i];
             SetPixel(graphics_, i % ENGINE_WIDTH, i / ENGINE_WIDTH,
-                ((pixel.dat & 0xff0000) >> 16) | (pixel.dat & 0x00ff00) | ((pixel.dat & 0x0000ff) << 16));
+                ((pixel.dat & 0xff0000) >> 16) | (pixel.dat & 0x00ff00) | 
+                ((pixel.dat & 0x0000ff) << 16));
         }
         return true;
     }

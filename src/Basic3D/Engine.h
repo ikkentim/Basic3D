@@ -22,20 +22,24 @@
 
 class Engine {
 public:
+    Engine();
     void tick(double timeElapsed);
     bool update();
     const Color * buffer();
-    const int buffer_size();
+    const inline int buffer_size();
 protected:
     virtual void engine_update() = 0;
     virtual void engine_render() = 0;
-    void buffer_clear(Color color);
+    void buffer_clear();
+    void buffer_set_color(Color color);
     void buffer_set(int x, int y, float depth, Color color);
     bool buffer_check(int x, int y, float depth);
 private:
     Color buffer_[ENGINE_WIDTH * ENGINE_HEIGHT];
     float depthBuffer_[ENGINE_WIDTH * ENGINE_HEIGHT];
-
+    Color dBuffer_[ENGINE_WIDTH * ENGINE_HEIGHT];
+    float dDepthBuffer_[ENGINE_WIDTH * ENGINE_HEIGHT];
+    
     bool awaitRender_ = false;
     bool awaitUpdate_ = false;
     double timeSinceRender_ = 0;

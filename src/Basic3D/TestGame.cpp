@@ -101,6 +101,17 @@ TestGame::TestGame() {
     meshes_[meshes_count_++] = cmesh(0, 2, &t);
     meshes_[meshes_count_++] = cmesh(0, 4, &t);
     meshes_[meshes_count_++] = cmesh(0, 6, &t);
+    meshes_[meshes_count_++] = cmesh(0, 8, &t);
+    meshes_[meshes_count_++] = cmesh(0, 10, &t);
+    meshes_[meshes_count_++] = cmesh(0, 12, &t);
+    meshes_[meshes_count_++] = cmesh(0, 14, &t);
+    meshes_[meshes_count_++] = cmesh(0, 16, &t);
+    meshes_[meshes_count_++] = cmesh(0, 18, &t);
+    meshes_[meshes_count_++] = cmesh(0, 20, &t);
+    meshes_[meshes_count_++] = cmesh(0, 22, &t);
+    meshes_[meshes_count_++] = cmesh(0, 24, &t);
+
+    buffer_set_color(0x353535);
 }
 
 void TestGame::engine_update() {
@@ -119,15 +130,14 @@ void TestGame::scan_line(int y, Vertex * va, Vertex * vb, Vertex * vc,
 
     float z1 = interpolate(va->coordinates.z, vb->coordinates.z, gradient1),
         z2 = interpolate(vc->coordinates.z, vd->coordinates.z, gradient2),
-
-        su = interpolate(va->texture_coordinates.x, vb->texture_coordinates.x, 
+        su = interpolate(va->texture_coordinates.x, vb->texture_coordinates.x,
             gradient1),
-        eu = interpolate(vc->texture_coordinates.x, vd->texture_coordinates.x, 
+        eu = interpolate(vc->texture_coordinates.x, vd->texture_coordinates.x,
             gradient2),
 
-        sv = interpolate(va->texture_coordinates.y, vb->texture_coordinates.y, 
+        sv = interpolate(va->texture_coordinates.y, vb->texture_coordinates.y,
             gradient1),
-        ev = interpolate(vc->texture_coordinates.y, vd->texture_coordinates.y, 
+        ev = interpolate(vc->texture_coordinates.y, vd->texture_coordinates.y,
             gradient2);
 
     for (int x = sx; x < ex; x++) {
@@ -172,8 +182,8 @@ void TestGame::draw_triangle(Vertex v1, Vertex v2, Vertex v3,
 }
 
 void TestGame::engine_render() {
-    buffer_clear(0x353535);
-
+    buffer_clear();
+    
     static float rot = 0;
     rot += PI / 120;
     if (rot > 4 * PI)
@@ -182,10 +192,11 @@ void TestGame::engine_render() {
     camera_.x = (float)sin(rot) * 2.5f;
     camera_.y = -0.3f;
     camera_.z = (float)cos(rot) * 2.5f;
+    
     Matrix4 viewMatrix = matrix_look_at(camera_, Vector3(0, 0, 0), vector_up());
     Matrix4 projectionMatrix = matrix_perspective(0.1f, 
         ((float)ENGINE_WIDTH) / ENGINE_HEIGHT, 0.01f, 1.0f);
-
+    
     for (int i = 0; i < meshes_count_; i++) {
         Matrix4 transform = meshes_[i].world * viewMatrix * projectionMatrix;
 
@@ -196,4 +207,5 @@ void TestGame::engine_render() {
                 project(meshes_[i].vertices[meshes_[i].faces[j].c], transform),
                 meshes_[i].texture);
     }
+    
 }
