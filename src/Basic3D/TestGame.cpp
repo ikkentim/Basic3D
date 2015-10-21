@@ -175,15 +175,15 @@ void TestGame::engine_render() {
     buffer_clear(0x353535);
 
     static float rot = 0;
-    rot += PI / 80;
+    rot += PI / 120;
     if (rot > 4 * PI)
         rot -= 4 * PI;
 
-    camera_.x = (float)sin(rot);
-    camera_.y = -0.8f;
-    camera_.z = (float)cos(rot);
+    camera_.x = (float)sin(rot) * 2.5f;
+    camera_.y = -0.3f;
+    camera_.z = (float)cos(rot) * 2.5f;
     Matrix4 viewMatrix = matrix_look_at(camera_, Vector3(0, 0, 0), vector_up());
-    Matrix4 projectionMatrix = matrix_perspective(0.05f, 
+    Matrix4 projectionMatrix = matrix_perspective(0.1f, 
         ((float)ENGINE_WIDTH) / ENGINE_HEIGHT, 0.01f, 1.0f);
 
     for (int i = 0; i < meshes_count_; i++) {
